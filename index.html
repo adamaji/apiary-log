@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apiary Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- ============ HOME ============ -->
+  <section class="view active" id="view-home">
+    <header class="scr-header">
+      <div class="scr-logo-row">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2 L21 7 V17 L12 22 L3 17 V7 Z" stroke="var(--accent)" stroke-width="1.6" stroke-linejoin="round"/>
+          <circle cx="12" cy="12" r="3.2" fill="var(--accent)"/>
+        </svg>
+        <div class="serif scr-title">Apiary Log</div>
+      </div>
+      <div class="scr-sub" id="home-sub"></div>
+    </header>
+
+    <button type="button" class="cta" id="btn-new-inspection">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      New Inspection
+    </button>
+
+    <div class="section-label">Hives</div>
+    <div class="hive-grid" id="hive-grid"></div>
+  </section>
+
+  <!-- ============ NEW INSPECTION ============ -->
+  <section class="view" id="view-form">
+    <header class="scr-header row">
+      <button type="button" class="back-btn" id="form-back">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M15 5L9 12L15 19" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="serif" style="font-weight:700; font-size:19px;">New Inspection</div>
+    </header>
+
+    <div class="fields">
+
+      <div class="field-card">
+        <div class="field-head">
+          <div class="field-title">Hive Number</div>
+          <div class="tag-required">Required</div>
+        </div>
+        <div class="hive-chips" id="hive-chip-row"></div>
+        <input type="text" id="input-hive-other" class="text-input-real" placeholder="Name this hive&hellip;" style="display:none;">
+        <div class="field-error" id="hive-error"></div>
+      </div>
+
+      <div class="field-card">
+        <div class="field-head">
+          <div class="field-title">Inspected By</div>
+          <div class="tag-optional">Optional</div>
+        </div>
+        <input type="text" id="input-inspector" class="text-input-real" placeholder="e.g. Mimi &amp; Keith">
+      </div>
+
+      <div class="field-card">
+        <div class="field-head">
+          <div class="field-title">Conditions</div>
+          <div class="tag-optional">Optional</div>
+        </div>
+        <div class="toggle-row">
+          <div class="flabel">Sufficient Bees</div>
+          <div class="toggle-group" data-field="bees">
+            <button type="button" class="toggle" data-value="yes">Yes</button>
+            <button type="button" class="toggle" data-value="no">No</button>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <div class="flabel">Sufficient Honey / Nectar</div>
+          <div class="toggle-group" data-field="honey">
+            <button type="button" class="toggle" data-value="yes">Yes</button>
+            <button type="button" class="toggle" data-value="no">No</button>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <div class="flabel">Sufficient Pollen</div>
+          <div class="toggle-group" data-field="pollen">
+            <button type="button" class="toggle" data-value="yes">Yes</button>
+            <button type="button" class="toggle" data-value="no">No</button>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <div class="flabel">Queen Observed</div>
+          <div class="toggle-group" data-field="queen">
+            <button type="button" class="toggle" data-value="yes">Yes</button>
+            <button type="button" class="toggle" data-value="no">No</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-card">
+        <div class="field-head">
+          <div class="field-title">Brood Observed</div>
+          <div class="tag-optional">Optional</div>
+        </div>
+        <div class="subgroup">
+          <div class="sublabel">PRESENT</div>
+          <div class="chip-row" data-field="broodPresent">
+            <button type="button" class="brood-chip" data-value="Eggs">Eggs</button>
+            <button type="button" class="brood-chip" data-value="Larvae">Larvae</button>
+            <button type="button" class="brood-chip" data-value="Pupae">Pupae</button>
+          </div>
+        </div>
+        <div class="subgroup">
+          <div class="sublabel">NOT PRESENT</div>
+          <div class="chip-row" data-field="broodAbsent">
+            <button type="button" class="brood-chip" data-value="Eggs">Eggs</button>
+            <button type="button" class="brood-chip" data-value="Larvae">Larvae</button>
+            <button type="button" class="brood-chip" data-value="Pupae">Pupae</button>
+          </div>
+        </div>
+        <div class="hr"></div>
+        <div class="toggle-row">
+          <div class="flabel">Sufficient Brood</div>
+          <div class="toggle-group" data-field="sufficientBrood">
+            <button type="button" class="toggle" data-value="yes">Yes</button>
+            <button type="button" class="toggle" data-value="no">No</button>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <div class="flabel">Good Brood Pattern</div>
+          <div class="toggle-group" data-field="goodPattern">
+            <button type="button" class="toggle" data-value="yes">Yes</button>
+            <button type="button" class="toggle" data-value="no">No</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-card">
+        <div class="field-head">
+          <div class="field-title">Notes</div>
+          <div class="tag-optional">Optional</div>
+        </div>
+        <textarea id="input-notes" class="textarea-real" placeholder="Anything worth remembering &mdash; swarm cells, feeding, mite counts&hellip;"></textarea>
+      </div>
+
+      <div class="field-card">
+        <div class="field-head">
+          <div class="field-title">Check Next Inspection</div>
+          <div class="tag-optional">Optional</div>
+        </div>
+        <input type="text" id="input-checknext" class="text-input-real" placeholder="e.g. Check for queen in 2 weeks">
+        <div class="helper-text">Shows up on this hive's log for next time.</div>
+      </div>
+
+    </div>
+
+    <div class="save-wrap">
+      <button type="button" class="save-btn" id="btn-save">Save Inspection</button>
+      <div class="timestamp-note">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7V12L15.5 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Logged automatically as today's date &amp; time
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HIVE HISTORY ============ -->
+  <section class="view" id="view-history">
+    <header class="hist-header">
+      <div class="hist-title-row">
+        <button type="button" class="back-btn" id="history-back">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M15 5L9 12L15 19" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="serif hist-title" id="hist-title">Hive</div>
+      </div>
+      <div class="hist-sub" id="hist-sub"></div>
+    </header>
+
+    <div class="timeline" id="timeline"></div>
+
+    <button type="button" class="fab" id="fab-new" aria-label="New inspection for this hive">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="var(--accent-ink)" stroke-width="2.3" stroke-linecap="round"/></svg>
+    </button>
+  </section>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
