@@ -59,16 +59,17 @@
   }
 
   function renderStatus(message, showRetry) {
-    var grid = $('#hive-grid');
-    grid.style.gridTemplateColumns = '1fr';
-    grid.innerHTML = '<div class="tl-empty">' + escapeHtml(message) + '</div>';
+    $('#hive-table').classList.add('hidden');
+    $('#add-hive-tile').classList.add('hidden');
+    var status = $('#hive-status');
+    status.innerHTML = '<div class="tl-empty">' + escapeHtml(message) + '</div>';
     if (showRetry) {
       var retry = document.createElement('button');
       retry.type = 'button';
       retry.className = 'add-tile';
       retry.textContent = 'Try again';
       retry.addEventListener('click', loadData);
-      grid.appendChild(retry);
+      status.appendChild(retry);
     }
     $('#home-sub').textContent = '';
   }
@@ -82,7 +83,9 @@
       })
       .then(function (json) {
         inspections = parseData(json);
-        $('#hive-grid').style.gridTemplateColumns = '';
+        $('#hive-status').innerHTML = '';
+        $('#hive-table').classList.remove('hidden');
+        $('#add-hive-tile').classList.remove('hidden');
         openHome();
       })
       .catch(function (err) {
@@ -137,38 +140,40 @@
     return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
   }
 
+  function tagMini(label, value) {
+    var cls = value === 'yes' ? 'good' : value === 'no' ? 'bad' : 'unknown';
+    return '<div class="tag-mini ' + cls + '">' + label + '</div>';
+  }
+
   function renderHome() {
     var ids = allHiveIds();
     var total = inspections.length;
     $('#home-sub').textContent = ids.length + ' hive' + (ids.length === 1 ? '' : 's') + ' · ' + total + ' inspection' + (total === 1 ? '' : 's') + ' logged';
 
-    var grid = $('#hive-grid');
-    grid.innerHTML = '';
+    var body = $('#hive-table-body');
+    body.innerHTML = '';
     ids.forEach(function (id) {
       var last = lastForHive(id);
-      var card = document.createElement('button');
-      card.type = 'button';
-      card.className = 'hive-card';
-      card.dataset.hive = id;
+      var row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'hive-row';
+      row.dataset.hive = id;
       var title = /^\d+$/.test(id) ? 'Hive ' + id : id;
-      var body = '<div class="serif num">' + escapeHtml(title) + '</div>';
-      if (last) {
-        body += '<div class="meta">Last: ' + fmtDate(last.timestamp) + '</div>';
-        body += '<div class="insp">' + (last.inspector ? escapeHtml(last.inspector) : '—') + '</div>';
-      } else {
-        body += '<div class="none">No inspections yet</div>';
-      }
-      card.innerHTML = body;
-      card.addEventListener('click', function () { openHistory(id); });
-      grid.appendChild(card);
-    });
 
-    var addTile = document.createElement('button');
-    addTile.type = 'button';
-    addTile.className = 'add-tile';
-    addTile.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Add hive</span>';
-    addTile.addEventListener('click', function () { openForm({ view: 'home' }, 'other'); });
-    grid.appendChild(addTile);
+      var hiveCell = '<div class="hive-cell"><div class="serif num">' + escapeHtml(title) + '</div>';
+      hiveCell += '<div class="meta">' + (last ? fmtDate(last.timestamp) : 'No inspections') + '</div></div>';
+
+      var tagsCell = '<div class="tag-mini-row">';
+      tagsCell += tagMini('Bees', last ? last.bees : null);
+      tagsCell += tagMini('Honey', last ? last.honey : null);
+      tagsCell += tagMini('Pollen', last ? last.pollen : null);
+      tagsCell += tagMini('Queen seen', last ? last.queen : null);
+      tagsCell += '</div>';
+
+      row.innerHTML = hiveCell + tagsCell;
+      row.addEventListener('click', function () { openHistory(id); });
+      body.appendChild(row);
+    });
   }
 
   function openHome() {
@@ -371,6 +376,7 @@
 
   // ---------- Wiring ----------
   $('#btn-new-inspection').addEventListener('click', function () { openForm({ view: 'home' }); });
+  $('#add-hive-tile').addEventListener('click', function () { openForm({ view: 'home' }, 'other'); });
   $('#form-back').addEventListener('click', function () {
     if (returnTarget.view === 'history') openHistory(returnTarget.hive);
     else openHome();
